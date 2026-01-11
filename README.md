@@ -12,82 +12,93 @@ Each module is designed to ensure full modularity, replicability, and clarity.
 All results (figures, diagnostics, estimates) are generated via the scripts
 under empirics/, while all computational logic is handled in tools_empirics/.
 
---------------------------------------------------------------------------------
-FOLDER STRUCTURE
---------------------------------------------------------------------------------
 
-ROOT/
-│
-├── empirics/
-│   │
-│   ├── main.py
-│   │     → Central driver script. Runs the entire empirical pipeline:
-│   │         1. Loads the prepocessed data
-│   │         2. Choose time-varying factors with information criteria.
-│   │         3. Estimate time-varying loadings.
-│   │         4. OOS
-│   │         5. Generate output recalling the functions in tools_empirics
-│   │
-│   └── (other experiment scripts if needed)
-│
-├── tools_empirics/
-│   │
-│   ├── plotting.py
-│   │     → Centralized plotting functions.
-│   │       Contains routines for visualizing:
-│   │         • In-sample and OOS R², MSE
-│   │         • Factor loadings, cycles, and trends
-│   │         • ABC/IC criteria results
-│   │       All figures are automatically saved via save_and_close().
-│   │
-│   ├── factors_ic.py
-│   │     → Implements Bai & Ng (2002) information criteria for factor number
-│   │       determination. Returns optimal r*
-│   │
-│   ├── factors_abc.py
-│   │     → Implements the Alessi, Barigozzi, Capasso (ABC) for time-varying
-│   │       factor selection. 
-│   │
-│   ├── hyptest_by_wang.py
-│   │     → Hypothesis testing for time-variation in factor loadings and
-│   │       dynamics following Su and Wang (2017). Replicates an R package: TVMVP.
-│   │
-│   ├── alignment.py
-│   │     → Procrustes alignment and rotation utilities for factor spaces.
-│   │       Ensures consistent orientation of estimated factors across τ-grid.
-│   │
-│   ├── io_utils.py
-│   │     → Data input/output utilities:
-│   │         • Load panel data and metadata (e.g. EA-MD)
-│   │         • Handle transformations of the variables and produces the processed dataset
-│   │        
-│   │
-│   ├── estimation.py
-│   │     → Core estimation routines:
-│   │         • Static PCA estimation
-│   │         • Time-varying factor estimation via local windows / kernels
-│   │         
-│   │
-│   │
-│   ├── oos.py
-│   │     → performs the one-side out of sample:
-│   │         • comparison between fixed and time varying factor structure
-│   │       
-│   │
-│   ├── utils2.py
-│   │     → Miscellaneous helpers and transformations used throughout the
-│   │       project (indexing tools mostly).
-│   │
-│   ├── kernels.py
-│   │     → Defines kernel functions and weights for local estimation:
-│   │         • Epanechnikov and the local window
-│   │         • Bandwidth management
-│   │
-│   └── (other modules if added later)
-│
-├── DATA/             → Input datasets (cleaned or raw)
-├── FIGURES/          → Automatically generated figures
-└── CONFIG/           → Optional configuration files (paths, parameters)
+---
+
+## Folder Description
+
+### empirics/
+
+This folder contains the **main empirical scripts**.
+
+- **main.py**  
+  Central driver script that runs the full empirical pipeline:
+  1. Loads the preprocessed data  
+  2. Selects the number of (time-varying) factors using information criteria  
+  3. Estimates time-varying factor loadings  
+  4. Performs one-sided out-of-sample (OOS) evaluation  
+  5. Generates figures and diagnostics by calling functions in `tools_empirics/`
+
+---
+
+### tools_empirics/
+
+This folder contains **modular and reusable functions** used by the empirical scripts.
+
+- **plotting.py**  
+  Centralized plotting utilities for:
+  - In-sample and OOS R² and MSE  
+  - Factor loadings, cycles, and trends  
+  - ABC and IC selection results  
+  All figures are automatically saved using `save_and_close()`.
+
+- **factors_ic.py**  
+  Implements **Bai & Ng (2002)** information criteria for factor number selection.
+
+- **factors_abc.py**  
+  Implements the **Alessi–Barigozzi–Capasso (ABC)** criterion for time-varying factor selection.
+
+- **hyptest_by_wang.py**  
+  Hypothesis testing for time variation in factor loadings and dynamics following  
+  **Su & Wang (2017)**. Replicates the logic of the R package *TVMVP*.
+
+- **alignment.py**  
+  Procrustes alignment and rotation utilities for factor spaces.  
+  Ensures consistent orientation of estimated factors across the τ-grid.
+
+- **io_utils.py**  
+  Data input/output utilities:
+  - Loading panel data and metadata (e.g. EA-MD)
+  - Variable transformations
+  - Creation of processed datasets
+
+- **estimation.py**  
+  Core estimation routines:
+  - Static PCA estimation  
+  - Time-varying factor estimation via local windows or kernel smoothing
+
+- **oos.py**  
+  One-sided out-of-sample evaluation:
+  - Comparison between fixed and time-varying factor structures
+
+- **kernels.py**  
+  Kernel functions and weights for local estimation:
+  - Epanechnikov kernel  
+  - Local window estimators  
+  - Bandwidth management
+
+- **utils2.py**  
+  Miscellaneous helper functions used throughout the project  
+  (mainly indexing and data transformations).
+
+---
+
+## Data and Output
+
+- **data/**  
+  Contains raw and processed input datasets.
+
+- **figures/**  
+  Automatically generated figures and diagnostics.
+
+- **config/**  
+  Optional configuration files (paths, parameters, tuning options).
+
+---
+
+## Running the Pipeline
+
+1. Open the main script:
 
 --------------------------------------------------------------------------------
 RUNNING THE PIPELINE
@@ -97,19 +108,29 @@ RUNNING THE PIPELINE
        python empirics/main.py
 4. All results will be generated automatically  FIGURE/
 
---------------------------------------------------------------------------------
-NOTES
---------------------------------------------------------------------------------
-• All plotting functions save figures automatically in FIGURE/.
-• Intermediate results are cached where possible to avoid recomputation.
-• Factor number selection can be toggled between ABC and IC.
-• Scripts are designed to be fully modular – any component can be imported
-  independently for testing or notebook analysis.
 
-================================================================================
-AUTHOR / CONTACT
-================================================================================
-Author: [Luca Marchesi, Luca Orlando]
-Affiliation: [University of  Bologna]
-Project: Time-Varying Factor Model – an empirical application to European Area 
-Version: [12-11-2025]
+---
+
+## Notes
+
+- All plotting functions automatically save figures to `figures/`
+- Intermediate results are cached where possible to avoid unnecessary recomputation
+- Factor number selection can be toggled between **IC** and **ABC**
+- Each module is fully independent and can be imported for testing or notebook-based analysis
+
+---
+
+## Author & Contact
+
+**Authors:**  
+Luca Marchesi  
+Luca Orlando  
+
+**Affiliation:**  
+University of Bologna  
+
+**Project:**  
+*Time-Varying Factor Model – An Empirical Application to the Euro Area*
+
+**Version:**  
+12-11-2025
